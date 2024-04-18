@@ -7,7 +7,7 @@ Os arquivos aqui apresentados irão compor os exemplos (2. Elaboração de exemp
 > Este tema propõe a implementação de um aplicativo que consiste no gerenciamento de tarefas diárias, humor diário, datas importantes e ações recorrentes, para auxiliar os usuários no gerenciamento eficaz do tempo.
 > Segue abaixo imagem do protótipo realizado por mim para elaboração da tarefa:
 
-![Protótipo]("images/prototype.png")
+![Protótipo](images/prototype.png)
 
 ## Requisitos
 
@@ -53,7 +53,7 @@ Os arquivos aqui apresentados irão compor os exemplos (2. Elaboração de exemp
 
 ## Modelagem da CLI
 
-![Protótipo CLI]("images/cli-prototype.png")
+![Protótipo CLI](images/cli-prototype.png)
 
 ### Task status
 > Foi criado um map para registro dos status disponíveis, respectivamente com suas descrições e cores.
