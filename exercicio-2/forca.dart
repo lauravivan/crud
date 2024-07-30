@@ -71,13 +71,30 @@ void iniciarJogo() {
       print(mascaraPalavraSorteada);
     } else {
       qtdDeChancesRestantes--;
-      print('Você tem $qtdDeChancesRestantes chances');
-      print('❌' * (QNT_DE_CHANCES_TOTAIS - qtdDeChancesRestantes));
-      print('✅' * qtdDeChancesRestantes);
+
+      if (qtdDeChancesRestantes == 0) {
+        print('Oh no, você perdeu! A palavra sorteada foi: $palavraSorteada');
+        mascaraPalavraSorteada = 'x';
+      } else {
+        print('Você tem $qtdDeChancesRestantes chance(s)');
+        print('❌' * (QNT_DE_CHANCES_TOTAIS - qtdDeChancesRestantes));
+        print('✅' * qtdDeChancesRestantes);
+        print('');
+      }
     }
   }
 
-  print('WIIII VOCÊ VENCEU O JOGO DA FORCA!! DESEJA JOGAR NOVAMENTE? (s/n)');
+  if (mascaraPalavraSorteada == 'x') {
+    jogarNovamente('Deseja jogar novamente? (s/n)');
+  } else {
+    jogarNovamente(
+        'WIIII VOCÊ VENCEU O JOGO DA FORCA!! DESEJA JOGAR NOVAMENTE? (s/n)');
+  }
+}
+
+void jogarNovamente(String textoRetorno) {
+  print(textoRetorno);
+  print('');
   String continuar = stdin.readLineSync()!;
 
   if (continuar.trim() == 's') {
@@ -86,5 +103,7 @@ void iniciarJogo() {
     mascaraPalavraSorteada = '_' * palavraSorteada.length;
     letraEscolhida = '';
     iniciarJogo();
+  } else {
+    print('bye bye :)');
   }
 }
