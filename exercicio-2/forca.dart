@@ -43,10 +43,13 @@ List<int> getIndexesDasLetrasAcertadas() {
 void setLetra() {
   stdout.write('Escolha uma letra: ');
   String usuarioInput = stdin.readLineSync()!;
-
   String letra = usuarioInput.substring(0);
 
-  letraEscolhida = letra.toLowerCase();
+  if (usuarioInput.length == 0) {
+    throw Exception('Letra inválida');
+  } else {
+    letraEscolhida = letra.toLowerCase();
+  }
 }
 
 bool isLetraNaPalavra() {
@@ -61,22 +64,28 @@ void iniciarJogo(Function mostrarHeader) {
   mostrarHeader();
 
   while (isJogoEmAndamento()) {
-    setLetra();
-    bool letraEstaNaPalavra = isLetraNaPalavra();
+    try {
+      setLetra();
 
-    if (letraEstaNaPalavra) {
-      updateMascaraPalavraSorteada();
-      print(mascaraPalavraSorteada);
-    } else {
-      qtdDeChancesRestantes--;
+      bool letraEstaNaPalavra = isLetraNaPalavra();
 
-      if (qtdDeChancesRestantes == 0) {
-        var statusRetorno = getStatusRetorno('perdeu');
-        statusRetorno();
+      if (letraEstaNaPalavra) {
+        updateMascaraPalavraSorteada();
+
+        printEspaco(() => print(mascaraPalavraSorteada));
       } else {
-        var statusRetorno = getStatusRetorno('perdeu-andamento');
-        statusRetorno();
+        qtdDeChancesRestantes--;
+
+        if (qtdDeChancesRestantes == 0) {
+          var statusRetorno = getStatusRetorno('perdeu');
+          statusRetorno();
+        } else {
+          var statusRetorno = getStatusRetorno('perdeu-andamento');
+          statusRetorno();
+        }
       }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -107,20 +116,25 @@ Function getStatusRetorno(String status) {
   switch (status) {
     case 'perdeu':
       return () {
-        print('Oh no, você perdeu! A palavra sorteada foi: $palavraSorteada');
+        printEspaco(() =>
+            'Oh no, você perdeu! A palavra sorteada foi: $palavraSorteada');
         mascaraPalavraSorteada = 'x';
       };
     case 'perdeu-andamento':
       return () {
-        print('Você tem $qtdDeChancesRestantes chance(s)');
-        print('❌' * (QNT_DE_CHANCES_TOTAIS - qtdDeChancesRestantes));
-        print('✅' * qtdDeChancesRestantes);
-        print('');
+        printEspaco(() => {
+              print('Você tem $qtdDeChancesRestantes chance(s)'),
+              print('❌' * (QNT_DE_CHANCES_TOTAIS - qtdDeChancesRestantes)),
+              print('✅' * qtdDeChancesRestantes)
+            });
       };
     case 'venceu':
       return () {
-        jogarNovamente(
-            'WIIII VOCÊ VENCEU O JOGO DA FORCA!! DESEJA JOGAR NOVAMENTE? (s/n)');
+        printEspaco(() => {
+              print('🥳🪅🎉🥳🪅🎉🥳🪅🎉'),
+              jogarNovamente(
+                  'WIIII VOCÊ VENCEU O JOGO DA FORCA!! DESEJA JOGAR NOVAMENTE? (s/n)')
+            });
       };
     default:
       throw Exception('Status inválido: $status');
@@ -128,7 +142,14 @@ Function getStatusRetorno(String status) {
 }
 
 void mostrarHeader() {
-  print('----- 👽 JOGO DA FORCA 👽 -----');
-  print('Desenvolvido por Laura Vivan Gonçalves');
+  printEspaco(() => {
+        print('----- 👽 JOGO DA FORCA 👽 -----'),
+        print('Desenvolvido por Laura Vivan Gonçalves')
+      });
+}
+
+void printEspaco(Function printTexto) {
+  print('');
+  printTexto();
   print('');
 }
