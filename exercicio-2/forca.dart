@@ -8,11 +8,7 @@ String mascaraPalavraSorteada = '_' * palavraSorteada.length;
 String letraEscolhida = '';
 
 void main() {
-  print('----- 👽 JOGO DA FORCA 👽 -----');
-  print('Desenvolvido por Laura Vivan Gonçalves');
-  print('');
-
-  iniciarJogo();
+  iniciarJogo(mostrarHeader);
 }
 
 String getPalavraSorteada() {
@@ -61,7 +57,9 @@ bool isJogoEmAndamento() {
   return mascaraPalavraSorteada.contains('_');
 }
 
-void iniciarJogo() {
+void iniciarJogo(Function mostrarHeader) {
+  mostrarHeader();
+
   while (isJogoEmAndamento()) {
     setLetra();
     bool letraEstaNaPalavra = isLetraNaPalavra();
@@ -73,13 +71,11 @@ void iniciarJogo() {
       qtdDeChancesRestantes--;
 
       if (qtdDeChancesRestantes == 0) {
-        print('Oh no, você perdeu! A palavra sorteada foi: $palavraSorteada');
-        mascaraPalavraSorteada = 'x';
+        var statusRetorno = getStatusRetorno('perdeu');
+        statusRetorno();
       } else {
-        print('Você tem $qtdDeChancesRestantes chance(s)');
-        print('❌' * (QNT_DE_CHANCES_TOTAIS - qtdDeChancesRestantes));
-        print('✅' * qtdDeChancesRestantes);
-        print('');
+        var statusRetorno = getStatusRetorno('perdeu-andamento');
+        statusRetorno();
       }
     }
   }
@@ -87,14 +83,13 @@ void iniciarJogo() {
   if (mascaraPalavraSorteada == 'x') {
     jogarNovamente('Deseja jogar novamente? (s/n)');
   } else {
-    jogarNovamente(
-        'WIIII VOCÊ VENCEU O JOGO DA FORCA!! DESEJA JOGAR NOVAMENTE? (s/n)');
+    var statusRetorno = getStatusRetorno('venceu');
+    statusRetorno();
   }
 }
 
 void jogarNovamente(String textoRetorno) {
   print(textoRetorno);
-  print('');
   String continuar = stdin.readLineSync()!;
 
   if (continuar.trim() == 's') {
@@ -102,8 +97,38 @@ void jogarNovamente(String textoRetorno) {
     qtdDeChancesRestantes = 15;
     mascaraPalavraSorteada = '_' * palavraSorteada.length;
     letraEscolhida = '';
-    iniciarJogo();
+    iniciarJogo(mostrarHeader);
   } else {
     print('bye bye :)');
   }
+}
+
+Function getStatusRetorno(String status) {
+  switch (status) {
+    case 'perdeu':
+      return () {
+        print('Oh no, você perdeu! A palavra sorteada foi: $palavraSorteada');
+        mascaraPalavraSorteada = 'x';
+      };
+    case 'perdeu-andamento':
+      return () {
+        print('Você tem $qtdDeChancesRestantes chance(s)');
+        print('❌' * (QNT_DE_CHANCES_TOTAIS - qtdDeChancesRestantes));
+        print('✅' * qtdDeChancesRestantes);
+        print('');
+      };
+    case 'venceu':
+      return () {
+        jogarNovamente(
+            'WIIII VOCÊ VENCEU O JOGO DA FORCA!! DESEJA JOGAR NOVAMENTE? (s/n)');
+      };
+    default:
+      throw Exception('Status inválido: $status');
+  }
+}
+
+void mostrarHeader() {
+  print('----- 👽 JOGO DA FORCA 👽 -----');
+  print('Desenvolvido por Laura Vivan Gonçalves');
+  print('');
 }
